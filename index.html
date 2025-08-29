@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Emergency Service Directory</title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <style>
+    /* ---- Exact tokens tuned from the PDF ---- */
+    :root{
+      --bg-mint:#F1FAF5;            /* page background */
+      --card-bg:#FFFFFF;            /* cards + history bg */
+      --hero-grad-l:#0E6C44;        /* hero gradient left */
+      --hero-grad-r:#16794C;        /* hero gradient right */
+      --text-title:#0F1E17;         /* dark title */
+      --text-sub:#6B7280;           /* gray subtitle */
+      --pill-gray:#EEF2F7;          /* gray chip (category) */
+      --btn-green:#16A34A;          /* call button */
+      --btn-green-hover:#128A3F;
+      --copy-border:#D9DEE6;        /* copy button border */
+      --shadow:0 6px 18px rgba(16,24,40,.06);
+      --radius:14px;                /* card corner */
+    }
+    body{ background:var(--bg-mint); }
+    .hero{
+      background: linear-gradient(90deg,var(--hero-grad-l),var(--hero-grad-r));
+    }
+    .card{
+      background:var(--card-bg);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid #EDF1F5;
+    }
+    .pill{
+      background:var(--pill-gray);
+      color:#6B7280;
+      font-size:12px;
+      padding:.25rem .5rem;
+      border-radius:999px;
+      line-height:1;
+      display:inline-flex;align-items:center;gap:.35rem;
+    }
+    .copy-btn{
+      border:1px solid var(--copy-border);
+      background:#fff;
+      height:40px;border-radius:10px;
+      font-weight:600;
+    }
+    .call-btn{
+      background:var(--btn-green);
+      color:#fff;height:40px;border-radius:10px;
+      font-weight:600;
+    }
+    .call-btn:hover{ background:var(--btn-green-hover); }
+    .badge{
+      height:32px; min-width:48px; padding:0 .65rem;
+      border-radius:999px; display:inline-flex;
+      align-items:center; justify-content:center;
+      font-weight:700; font-size:14px;
+    }
+    .badge-heart{ background:#FFE5E8; color:#E11D48; }
+    .badge-coin{ background:#FFF3C6; color:#B45309; }
+    .badge-copy{ background:#D1FADF; color:#065F46; }
+    .history{
+      background:var(--card-bg);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid #EDF1F5;
+    }
+    /* icon box (top-left of card) */
+    .icon-wrap{
+      width:40px;height:40px;border-radius:10px;
+      background:#F9FAFB;display:grid;place-items:center;
+      border:1px solid #EDF1F5;
+      font-size:20px;
+    }
+    /* heart (top-right) */
+    .heart{
+      color:#94A3B8; font-size:18px;
+    }
+  </style>
+</head>
+<body class="text-[15px] tracking-[0.01em]">
+
+  <!-- NAVBAR -->
+  <header class="w-full bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <img src="assets/logo.png" alt="logo" class="w-9 h-9 rounded-full" />
+        <span class="text-[18px] font-bold text-emerald-700">Emergency</br> Service</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="badge badge-heart">0&nbsp;❤️</span>
+        <span class="badge badge-coin">100&nbsp;🪙</span>
+        <span class="badge badge-copy">2&nbsp;Copy</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero text-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-7 text-center">
+      <img src="assets/logo-dark.png" alt="govt" class="w-16 mx-auto mb-2" />
+      <h1 class="text-[28px] md:text-[30px] font-bold leading-tight">জরুরি সেবা ডিরেক্টরি</h1>
+      <p class="text-[13px] opacity-95 mt-1">
+        Government Emergency Services at Your Fingertip – A Project by Government of the People’s Republic of Bangladesh
+      </p>
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <main class="max-w-full mx-auto px-4 sm:px-6 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+      
+      <!-- LEFT: 3x3 CARDS -->
+      <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+
+        <!-- CARD TEMPLATE x9 (texts copied from PDF page-1) -->
+        <!-- 1 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🚨</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold text-[var(--text-title)]">জাতীয় জরুরি সেবা</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">National Emergency</p>
+          <div class="mt-2 text-[28px] font-bold">999</div>
+          <div class="mt-1"><span class="pill">সার্বজনীন</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 2 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">👮</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">পুলিশ</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Police</p>
+          <div class="mt-2 text-[28px] font-bold">999</div>
+          <div class="mt-1"><span class="pill">পুলিশ</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 3 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🚒</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">ফায়ার সার্ভিস</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Fire Service</p>
+          <div class="mt-2 text-[28px] font-bold">999</div>
+          <div class="mt-1"><span class="pill">ফায়ার</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 4 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🚑</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">অ্যাম্বুলেন্স</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Ambulance</p>
+          <div class="mt-2 text-[28px] font-bold">1994-999999</div>
+          <div class="mt-1"><span class="pill">স্বাস্থ্য</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 5 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🧒</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">নারী ও শিশু সহায়তা</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Women & Child Helpline</p>
+          <div class="mt-2 text-[28px] font-bold">109</div>
+          <div class="mt-1"><span class="pill">সহায়তা</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 6 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🏛️</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">দুদক</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Anti-Corruption</p>
+          <div class="mt-2 text-[28px] font-bold">106</div>
+          <div class="mt-1"><span class="pill">সরকারি</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 7 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">💡</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">বিদ্যুৎ বিভ্রাট</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Electricity Outage</p>
+          <div class="mt-2 text-[28px] font-bold">16216</div>
+          <div class="mt-1"><span class="pill">বিদ্যুৎ</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 8 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🏥</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">ব্র্যাক</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Brac</p>
+          <div class="mt-2 text-[28px] font-bold">16445</div>
+          <div class="mt-1"><span class="pill">এন জিও</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+        <!-- 9 -->
+        <article class="card p-4">
+          <div class="flex items-start justify-between">
+            <div class="icon-wrap">🚆</div>
+            <span class="heart">♡</span>
+          </div>
+          <h3 class="mt-3 text-[18px] font-bold">বাংলাদেশ রেলওয়ে</h3>
+          <p class="text-[13px] text-[var(--text-sub)]">Bangladesh Railway</p>
+          <div class="mt-2 text-[28px] font-bold">163</div>
+          <div class="mt-1"><span class="pill">পরি বহন</span></div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+  <!-- Copy Button -->
+  <button class="copy-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-copy"></i> Copy
+  </button>
+
+  <!-- Call Button -->
+  <button class="call-btn flex items-center justify-center gap-2">
+    <i class="fa-solid fa-phone"></i> Call
+  </button>
+</div>
+        </article>
+
+      </div>
+
+      <!-- RIGHT: HISTORY PANEL -->
+      <aside class="history p-4">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-[18px]">📞</span>
+            <h2 class="text-[16px] font-bold">Call History</h2>
+          </div>
+          <button class="px-4 h-9 rounded-full bg-[var(--btn-green)] text-white text-[14px] font-semibold">Clear</button>
+        </div>
+        <ul class="divide-y divide-[#EDF1F5] text-[14px]">
+          <!-- Sample rows (static to match PDF first page) -->
+          <li class="py-2 flex items-center justify-between"><span>জাতীয় জরুরি সেবা</span><span class="text-[13px] text-[var(--text-sub)]">11:36:58 AM</span></li>
+          <li class="py-2 flex items-center justify-between"><span>অ্যাম্বুলেন্স</span><span class="text-[13px] text-[var(--text-sub)]">11:36:58 AM</span></li>
+          <li class="py-2 flex items-center justify-between"><span>পুলিশ</span><span class="text-[13px] text-[var(--text-sub)]">11:36:58 AM</span></li>
+          <li class="py-2 flex items-center justify-between"><span>জাতীয় জরুরি সেবা</span><span class="text-[13px] text-[var(--text-sub)]">11:36:58 AM</span></li>
+          <li class="py-2 flex items-center justify-between"><span>জাতীয় জরুরি সেবা</span><span class="text-[13px] text-[var(--text-sub)]">11:36:58 AM</span></li>
+          <li class="py-2 flex items-center justify-between"><span>জাতীয় জরুরি সেবা</span><span class="text-[13px] text-[var(--text-sub)]">11:36:58 AM</span></li>
+        </ul>
+      </aside>
+
+    </div>
+  </main>
+<script src="script.js" defer></script>
+</body>
+</html>
