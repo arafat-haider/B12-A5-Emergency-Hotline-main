@@ -1,45 +1,143 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const cardSection = document.getElementById('cardSection');
-  const historyList = document.getElementById('historyList');
+  // ---------- Navbar badges (HTML বদলাবো না, তাই class দিয়েই ধরি) ----------
+  const heartBadge = document.querySelector('.badge-heart');
+  const coinBadge  = document.querySelector('.badge-coin');
+  const copyBadge  = document.querySelector('.badge-copy');
 
-  if (!cardSection) {
-    console.error('cardSection container not found. Did you set id="cardSection" in HTML?');
-    return; // এখানে থামাই, যাতে appendChild error না দেয়
+  // সংখ্যাগুলো বর্তমান টেক্সট থেকে initialize (যেমন "100 🪙")
+  const parseLeadingInt = (el, fallback) => {
+    if (!el) return fallback;
+    const m = el.textContent.trim().match(/\d+/);
+    return m ? parseInt(m[0], 10) : fallback;
+  };
+
+  let hearts = parseLeadingInt(heartBadge, 0);
+  let coins  = parseLeadingInt(coinBadge,  100);
+  let copies = parseLeadingInt(copyBadge,  0);
+
+  const updateBadges = () => {
+    if (heartBadge) heartBadge.textContent = `${hearts} ❤️`;
+    if (coinBadge)  coinBadge.textContent  = `${coins} 🪙`;
+    if (copyBadge)  copyBadge.textContent  = `${copies} Copy`;
+  };
+  updateBadges();
+
+  // ---------- History সেকশন ----------
+  const historyAside = document.querySelector('aside.history');
+  const historyList  = historyAside ? historyAside.querySelector('ul') : null;
+  const clearBtn     = historyAside ? historyAside.querySelector('button') : null;
+
+  // Requirement অনুযায়ী history শুরুতে খালি
+  if (historyList) historyList.innerHTML = '';
+
+  const timeNow = () =>
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const addHistory = (name, number) => {
+    if (!historyList) return;
+    const li = document.createElement('li');
+    li.className = 'py-2 flex items-center justify-between';
+    li.innerHTML = `<span>${name} - ${number}</span><span class="text-[13px] text-[#6B7280]">${timeNow()}</span>`;
+    historyList.prepend(li);
+  };
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (historyList) historyList.innerHTML = '';
+    });
   }
-  if (!historyList) {
-    console.error('historyList container not found. Did you set id="historyList" in HTML?');
-  }
 
-  const services = [
-    { nameBn:"জাতীয় জরুরি সেবা", nameEn:"National Emergency", number:"999", category:"সার্বজনীন" },
-    // ... বাকি ডাটাগুলো
-  ];
+  // ---------- Clipboard helper (fallback সহ) ----------
+  const copyToClipboard = async (text) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  };
 
-  services.forEach(svc => {
-    const card = document.createElement('article');
-    card.className = 'card p-4';
-    card.innerHTML = `
-      <div class="flex items-start justify-between">
-        <div class="icon-wrap">🚨</div>
-        <button class="heart-btn heart" type="button">♡</button>
-      </div>
-      <h3 class="mt-3 text-[18px] font-extrabold">${svc.nameBn}</h3>
-      <p class="text-[13px] text-[#6B7280]">${svc.nameEn}</p>
-      <div class="mt-2 text-[28px] font-extrabold">${svc.number}</div>
-      <div class="mt-1"><span class="pill">${svc.category}</span></div>
-      <div class="mt-4 grid grid-cols-2 gap-3">
-        <button class="copy-btn flex items-center justify-center gap-2" type="button"
-                data-name="${svc.nameBn}" data-number="${svc.number}">
-          <i class="fa-solid fa-copy"></i> Copy
-        </button>
-        <button class="call-btn flex items-center justify-center gap-2" type="button"
-                data-name="${svc.nameBn}" data-number="${svc.number}">
-          <i class="fa-solid fa-phone"></i> Call
-        </button>
-      </div>
-    `;
-    cardSection.appendChild(card); // <- cardSection থাকলেই এখন কাজ করবে
+  // ---------- Dial helper (মোবাইলে tel: ওপেন) ----------
+  const dialNumber = (raw) => {
+    const href = `tel:${String(raw).replace(/\s+/g, '')}`;
+    const a = document.createElement('a');
+    a.href = href;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  // ---------- Event Delegation (সমস্ত কার্ড/বাটনের জন্য) ----------
+  document.body.addEventListener('click', async (e) => {
+    // যেকোনো বাটন বা হার্ট span ধরব
+    const btn = e.target.closest('button');
+    const heartSpan = e.target.closest('span.heart');
+
+    // কার্ড কনটেক্সট বের করি
+    const card = (btn || heartSpan) ? (btn || heartSpan).closest('article.card') : null;
+
+    // ------- HEART (span.heart) -------
+    if (heartSpan && card) {
+      hearts += 1;
+      updateBadges();
+      // ভিজ্যুয়াল ইঙ্গিত
+      heartSpan.textContent = '❤️';
+      return;
+    }
+
+    if (!btn) return;
+
+    // কার্ডের ভেতর থেকে name/number/category DOM থেকে বের করি (HTML না বদলেই)
+    const getCardInfo = (root) => {
+      if (!root) return { nameBn: 'Service', number: '' };
+      const nameEl   = root.querySelector('h3');
+      const numberEl = root.querySelector('div.mt-2');
+      const nameBn   = nameEl ? nameEl.textContent.trim() : 'Service';
+      const number   = numberEl ? numberEl.textContent.trim() : '';
+      return { nameBn, number };
+    };
+
+    // ------- COPY -------
+    if (btn.classList.contains('copy-btn')) {
+      const { nameBn, number } = getCardInfo(card);
+      const ok = await copyToClipboard(number);
+      if (ok) {
+        copies += 1;
+        updateBadges();
+        alert(`Copied: ${nameBn} (${number})`);
+      } else {
+        alert('Copy failed. Try manually.');
+      }
+      return;
+    }
+
+    // ------- CALL -------
+    if (btn.classList.contains('call-btn')) {
+      const { nameBn, number } = getCardInfo(card);
+
+      if (coins < 20) {
+        alert('Not enough coins to make a call (need 20).');
+        return;
+      }
+
+      alert(`Calling ${nameBn} (${number})`);
+      coins -= 20;
+      updateBadges();
+      addHistory(nameBn, number);
+      // ডায়াল করার চেষ্টা (মোবাইলে নিশ্চিত কাজ করে)
+      dialNumber(number);
+      return;
+    }
   });
-
-  // নিচে আগের মতো event delegation / history add ইত্যাদি…
 });
