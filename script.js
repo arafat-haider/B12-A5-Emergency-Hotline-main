@@ -135,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
       coins -= 20;
       updateBadges();
       addHistory(nameBn, number);
-      // ডায়াল করার চেষ্টা (মোবাইলে নিশ্চিত কাজ করে)
       dialNumber(number);
       return;
     }
