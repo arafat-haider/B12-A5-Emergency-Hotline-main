@@ -1,19 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // ---------- Navbar badges (HTML বদলাবো না, তাই class দিয়েই ধরি) ----------
+  // -------- Navbar badges (HTML না বদলে সরাসরি class ধরছি) --------
   const heartBadge = document.querySelector('.badge-heart');
   const coinBadge  = document.querySelector('.badge-coin');
   const copyBadge  = document.querySelector('.badge-copy');
 
-  // সংখ্যাগুলো বর্তমান টেক্সট থেকে initialize (যেমন "100 🪙")
-  const parseLeadingInt = (el, fallback) => {
-    if (!el) return fallback;
-    const m = el.textContent.trim().match(/\d+/);
-    return m ? parseInt(m[0], 10) : fallback;
-  };
-
-  let hearts = parseLeadingInt(heartBadge, 0);
-  let coins  = parseLeadingInt(coinBadge,  100);
-  let copies = parseLeadingInt(copyBadge,  0);
+  // Spec অনুযায়ী ডিফল্ট মান (HTML-এ যা লেখা থাকুক, আমরা সেটাই overwrite করব)
+  let hearts = 0;
+  let coins  = 100;
+  let copies = 0;
 
   const updateBadges = () => {
     if (heartBadge) heartBadge.textContent = `${hearts} ❤️`;
@@ -22,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   updateBadges();
 
-  // ---------- History সেকশন ----------
+  // -------- History section --------
   const historyAside = document.querySelector('aside.history');
   const historyList  = historyAside ? historyAside.querySelector('ul') : null;
   const clearBtn     = historyAside ? historyAside.querySelector('button') : null;
 
-  // Requirement অনুযায়ী history শুরুতে খালি
+  // Requirement: শুরুতে history খালি
   if (historyList) historyList.innerHTML = '';
 
   const timeNow = () =>
@@ -47,7 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---------- Clipboard helper (fallback সহ) ----------
+  // -------- 💗 আইকনকে "বামে" আনা (HTML না বদলে flex order) --------
+  // আপনার কার্ড header: <div class="flex ..."> [icon-wrap][heart]
+  // heart-এ order:-1 দিলে এটা বামে চলে যাবে
+  document.querySelectorAll('article.card .heart').forEach(h => {
+    h.style.order = -1;
+    h.style.marginRight = '8px'; // একটু স্পেস
+  });
+
+  // -------- Clipboard helper (fallback সহ) --------
   const copyToClipboard = async (text) => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -68,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // ---------- Dial helper (মোবাইলে tel: ওপেন) ----------
+  // -------- Dial helper (মোবাইলে tel: ওপেন) --------
   const dialNumber = (raw) => {
     const href = `tel:${String(raw).replace(/\s+/g, '')}`;
     const a = document.createElement('a');
@@ -78,37 +80,34 @@ document.addEventListener('DOMContentLoaded', () => {
     a.remove();
   };
 
-  // ---------- Event Delegation (সমস্ত কার্ড/বাটনের জন্য) ----------
+  // -------- প্রয়োজনীয় ডাটা পার্সার (HTML থেকে name/number তুলি) --------
+  // আপনার HTML কার্ড স্ট্রাকচার থেকে আমরা শিরোনাম ও নাম্বার নিই
+  const getCardInfo = (card) => {
+    if (!card) return { nameBn: 'Service', number: '' };
+    const nameEl   = card.querySelector('h3');
+    const numberEl = card.querySelector('div.mt-2'); // নম্বরের div
+    const nameBn   = nameEl ? nameEl.textContent.trim() : 'Service';
+    const number   = numberEl ? numberEl.textContent.trim() : '';
+    return { nameBn, number };
+  };
+
+  // -------- Event Delegation: সব বাটন/হার্ট এক লিসেনারে --------
   document.body.addEventListener('click', async (e) => {
-    // যেকোনো বাটন বা হার্ট span ধরব
-    const btn = e.target.closest('button');
     const heartSpan = e.target.closest('span.heart');
+    const btn       = e.target.closest('button');
+    const card      = (heartSpan || btn) ? (heartSpan || btn).closest('article.card') : null;
 
-    // কার্ড কনটেক্সট বের করি
-    const card = (btn || heartSpan) ? (btn || heartSpan).closest('article.card') : null;
-
-    // ------- HEART (span.heart) -------
+    // 💗 Heart
     if (heartSpan && card) {
       hearts += 1;
       updateBadges();
-      // ভিজ্যুয়াল ইঙ্গিত
-      heartSpan.textContent = '❤️';
+      heartSpan.textContent = '❤️'; // ভিজ্যুয়াল ফিডব্যাক
       return;
     }
 
     if (!btn) return;
 
-    // কার্ডের ভেতর থেকে name/number/category DOM থেকে বের করি (HTML না বদলেই)
-    const getCardInfo = (root) => {
-      if (!root) return { nameBn: 'Service', number: '' };
-      const nameEl   = root.querySelector('h3');
-      const numberEl = root.querySelector('div.mt-2');
-      const nameBn   = nameEl ? nameEl.textContent.trim() : 'Service';
-      const number   = numberEl ? numberEl.textContent.trim() : '';
-      return { nameBn, number };
-    };
-
-    // ------- COPY -------
+    // 📋 Copy
     if (btn.classList.contains('copy-btn')) {
       const { nameBn, number } = getCardInfo(card);
       const ok = await copyToClipboard(number);
@@ -122,20 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // ------- CALL -------
+    // 📞 Call
     if (btn.classList.contains('call-btn')) {
       const { nameBn, number } = getCardInfo(card);
-
       if (coins < 20) {
         alert('Not enough coins to make a call (need 20).');
         return;
       }
-
       alert(`Calling ${nameBn} (${number})`);
       coins -= 20;
       updateBadges();
       addHistory(nameBn, number);
-      dialNumber(number);
+      dialNumber(number); // মোবাইলে ডায়ালার খুলবে
       return;
     }
   });
