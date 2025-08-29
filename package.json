@@ -1,0 +1,26 @@
+{
+  "name": "b12-a5-emergency-hotline-main",
+  "version": "1.0.0",
+  "description": "- **Website name & logo** on the left as Figma - **Heart icon, coin count (default-100), and Copy Count** on the right as Figma",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arafat-haider/B12-A5-Emergency-Hotline-main.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/arafat-haider/B12-A5-Emergency-Hotline-main/issues"
+  },
+  "homepage": "https://github.com/arafat-haider/B12-A5-Emergency-Hotline-main#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12"
+  }
+}
